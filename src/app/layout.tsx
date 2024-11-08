@@ -2,6 +2,8 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from '@/context/AuthContext';
 
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+
 export default function RootLayout({
   children,
 }: {

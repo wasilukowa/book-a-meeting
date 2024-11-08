@@ -1,12 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
+import { LoginProps } from './types';
 
-interface LoginProps {
-  onLoginSuccess: (token: string) => void;
-}
-
-export default function Login({ onLoginSuccess }: LoginProps) {
+export const Login = ({ onLoginSuccess }: LoginProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const handleSuccess = (credentialResponse: CredentialResponse) => {
@@ -32,4 +29,4 @@ export default function Login({ onLoginSuccess }: LoginProps) {
       )}
     </div>
   );
-}
+};

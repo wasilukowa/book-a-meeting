@@ -1,7 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import MeetingForm from '@/components/MeetingForm';
+import { EventForm, Calendar } from '@/components';
 import { useAuth } from '@/context/AuthContext';
 
 export default function CalendarPage() {
@@ -21,7 +21,8 @@ export default function CalendarPage() {
   return (
     <div className="container">
       <h1>Twój Kalendarz</h1>
-      <MeetingForm token={token} />
+      <Calendar />
+      <EventForm token={token} />
     </div>
   );
 }

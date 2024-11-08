@@ -1,12 +1,15 @@
 'use client';
 import { useState } from 'react';
+// import styles from './EventForm.module.css';
+import { EventFormProps, FormData } from './types';
 
-export default function EventForm({ token }) {
-  const [eventDetails, setEventDetails] = useState({
+export const EventForm = ({ token }: EventFormProps) => {
+  const [formData, setFormData] = useState<FormData>({
     title: '',
-    description: '',
+    date: '',
     startTime: '',
     endTime: '',
+    description: '',
   });
 
   const handleSubmit = async (e) => {
@@ -20,14 +23,14 @@ export default function EventForm({ token }) {
         },
         body: JSON.stringify({
           token,
-          eventDetails,
+          formData,
         }),
       });
 
       const data = await response.json();
       if (data.error) throw new Error(data.error);
 
-      alert('Spotkanie zostało dodane!');
+      alert('Wydarzenie zostało dodane!');
     } catch (error) {
       alert('Wystąpił błąd: ' + error.message);
     }
@@ -37,34 +40,30 @@ export default function EventForm({ token }) {
     <form onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Tytuł spotkania"
-        value={eventDetails.title}
-        onChange={(e) =>
-          setEventDetails({ ...eventDetails, title: e.target.value })
-        }
+        placeholder="Tytuł wydarzenia"
+        value={formData.title}
+        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
       />
       <textarea
-        placeholder="Opis spotkania"
-        value={eventDetails.description}
+        placeholder="Opis wydarzenia"
+        value={formData.description}
         onChange={(e) =>
-          setEventDetails({ ...eventDetails, description: e.target.value })
+          setFormData({ ...formData, description: e.target.value })
         }
       />
       <input
         type="datetime-local"
-        value={eventDetails.startTime}
+        value={formData.startTime}
         onChange={(e) =>
-          setEventDetails({ ...eventDetails, startTime: e.target.value })
+          setFormData({ ...formData, startTime: e.target.value })
         }
       />
       <input
         type="datetime-local"
-        value={eventDetails.endTime}
-        onChange={(e) =>
-          setEventDetails({ ...eventDetails, endTime: e.target.value })
-        }
+        value={formData.endTime}
+        onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
       />
-      <button type="submit">Dodaj spotkanie</button>
+      <button type="submit">Dodaj wydarzenie</button>
     </form>
   );
-}
+};
