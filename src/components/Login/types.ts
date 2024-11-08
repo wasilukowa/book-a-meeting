@@ -1,3 +1,3 @@
-export type LoginProps = {
-  onLoginSuccess: (token: string) => void;
-};
+export interface LoginProps {
+  onLoginSuccess?: () => void;
+}

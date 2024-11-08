@@ -1,9 +1,11 @@
 'use client';
+
 import { useState } from 'react';
-// import styles from './EventForm.module.css';
+import { useSession } from 'next-auth/react';
 import { EventFormProps, FormData } from './types';
 
-export const EventForm = ({ token }: EventFormProps) => {
+export const EventForm = ({ onSuccess }: EventFormProps) => {
+  const { data: session } = useSession();
   const [formData, setFormData] = useState<FormData>({
     title: '',
     date: '',
@@ -12,26 +14,41 @@ export const EventForm = ({ token }: EventFormProps) => {
     description: '',
   });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!session) {
+      alert('Musisz być zalogowany, aby dodać wydarzenie');
+      return;
+    }
 
     try {
       const response = await fetch('/api/calendar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.accessToken}`,
         },
         body: JSON.stringify({
-          token,
           formData,
-        }),
+        }), // nie musimy już wysyłać tokena osobno
       });
 
       const data = await response.json();
       if (data.error) throw new Error(data.error);
 
       alert('Wydarzenie zostało dodane!');
-    } catch (error) {
+      onSuccess?.(); // wywołujemy callback jeśli istnieje
+
+      // Opcjonalnie: wyczyść formularz po sukcesie
+      setFormData({
+        title: '',
+        date: '',
+        startTime: '',
+        endTime: '',
+        description: '',
+      });
+    } catch (error: any) {
       alert('Wystąpił błąd: ' + error.message);
     }
   };
@@ -43,6 +60,7 @@ export const EventForm = ({ token }: EventFormProps) => {
         placeholder="Tytuł wydarzenia"
         value={formData.title}
         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+        required
       />
       <textarea
         placeholder="Opis wydarzenia"
@@ -57,13 +75,17 @@ export const EventForm = ({ token }: EventFormProps) => {
         onChange={(e) =>
           setFormData({ ...formData, startTime: e.target.value })
         }
+        required
       />
       <input
         type="datetime-local"
         value={formData.endTime}
         onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
+        required
       />
-      <button type="submit">Dodaj wydarzenie</button>
+      <button type="submit" disabled={!session}>
+        {session ? 'Dodaj wydarzenie' : 'Zaloguj się, aby dodać wydarzenie'}
+      </button>
     </form>
   );
 };

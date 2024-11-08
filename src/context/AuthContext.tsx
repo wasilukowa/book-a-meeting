@@ -1,21 +1,25 @@
 'use client';
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
+import { useSession } from 'next-auth/react';
 
 interface AuthContextType {
-  token: string | null;
-  setToken: (token: string | null) => void;
+  isAuthenticated: boolean;
+  user: any; // możemy później dodać konkretny typ
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(null);
+  const { data: session, status } = useSession();
 
-  return (
-    <AuthContext.Provider value={{ token, setToken }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    isAuthenticated: !!session,
+    user: session?.user || null,
+    loading: status === 'loading',
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
