@@ -1,4 +1,7 @@
 'use client';
+
+import '@/styles/globals.css';
+
 import { SessionProvider } from 'next-auth/react';
 import { AuthProvider } from '@/context/AuthContext';
 import 'react-big-calendar/lib/css/react-big-calendar.css';

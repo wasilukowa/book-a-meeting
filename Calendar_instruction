@@ -1,0 +1,19 @@
+Cześć, 
+
+Dziękuję za dotychczasową pomoc w programie. Zanim przejdziemy dalej w ulepszaniu funkcjonalności chciałabym, żebyś wiedziała, jak chciałabym aby finalnie wyglądał mój projekt. Jest to rzecz, którą chciałabym umieścić na swoim GitHub więc bardziej ma to być pokazanie funkcjonalności jaką chciałabym uzyskać, niż faktyczny program, bo wiadomo, że to działałoby inaczej. 
+
+- Program ma pokazywać działanie kalendarza Google
+- Chciałabym żeby na pierwszym ekranie osoba, która sobie ogląda mój program mogła wybrać czy jest użytkownikiem:
+'TEST USER 1'
+'TEST USER 2'
+'CALENDAR OWNER'
+
+- Jeśli chodzi o funkcjonalności dla użytkowników testowych: W skrócie to ich panel ma możliwość umówienia spotkania u właściciela kalendarza, dodatkowo chciałabym żeby mieć podgląd jakie spotkania zostały już umówione, żeby można było je anulować lub edytować. Oczywiście użytkownicy testowi nie będą mieli podglądu do tego co mam w kalendarzu, ale bardziej gdzie Właściciel kalendarza ma 'wolny slot', 
+Chciałabym żeby można było wybrać czy spotkanie ma trwać 15 minut, 30 minut lub 60 minut, i w zależności od tego byłyby tam pokazane wolne terminy. 
+
+- Właściciel kalendarza ma podgląd do swojego kalendarza, plus może anulować, edytować, etc. spotkania. W takim wypadku chciałabym żeby użytkownik testowy dostawał stosowne powiadomienie. 
+
+Czy powinnam na ten moment pomyśleć o czymś jeszcze?
+Co myślisz o takiej funkcjonalności? Myślisz że o czymś zapomniałam albo powinnam coś doprecyzować? 
+
+Będę wdzięczna za wszelkie uwagi, no i pomoc w dalszym rozwijaniu aplikacji :)
