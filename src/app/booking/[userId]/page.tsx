@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import BookingForm from '@/components/BookingForm';
+import BookingForm from '@/components/BookingForm/BookingForm';
 
 export default async function BookingPage({
   params,
