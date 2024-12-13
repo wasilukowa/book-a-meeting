@@ -19,38 +19,80 @@ export default function ColumnActive({
     ...preparedSlots,
   ]);
 
+  // const isSlotChoosen = (id: string) => {
+  //   return choosenSlots.some((slot) => slot.id === id);
+  // };
+
+  // const manageChoosenSlots = (id: string) => {
+  //   if (isSlotChoosen(id)) {
+  //     setChoosenSlots((prev) => prev.filter((slot) => slot.id !== id));
+  //   } else {
+  //     setChoosenSlots((prev) => [...prev, id]);
+  //   }
+  // };
+
   const handleSlotClick = (id: TimeSlot) => {
     const clickedSlot = localPreparedSlots.find((slot) => slot.id === id);
+    console.log(clickedSlot);
 
-    // Najpierw aktualizujemy isChoosen dla klikniętego slotu
-    const slotsWithUpdatedChoosen = localPreparedSlots.map((slot) => ({
-      ...slot,
-      isChoosen: slot.id === id ? !slot.isChoosen : slot.isChoosen,
-    }));
+    const clickedSlotIndex = localPreparedSlots.findIndex(
+      (slot) => slot.id === id,
+    );
 
-    // Teraz aktualizujemy isSelectable
-    const newSlots = slotsWithUpdatedChoosen.map((slot, index, array) => {
-      if (index === 0) return slot; // pierwszy slot zostawiamy bez zmian
+    // const slotsWithUpdatedChoosen = localPreparedSlots.map((slot) => ({
+    //   ...slot,
+    //   isChoosen: slot.id === id ? !slot.isChoosen : slot.isChoosen,
+    // }));
 
-      const prevSlot = array[index - 1];
-
-      // Jeśli poprzedni slot jest false, ten i wszystkie następne też będą false
-      if (!prevSlot.isSelectable) {
-        return {
-          ...slot,
-          isSelectable: false,
-        };
+    let isSlotSelectableFalseEncountered = false;
+    const newSlots = localPreparedSlots.reduce((accumulator, slot, index) => {
+      if (index < clickedSlotIndex) {
+        return [...accumulator, { ...slot }];
       }
 
-      // W przeciwnym razie zachowujemy wartość z poprzedniego slotu
-      return {
-        ...slot,
-        isSelectable: prevSlot.isSelectable,
-      };
-    });
+      if (index === clickedSlotIndex) {
+        return [...accumulator, { ...slot, isChoosen: true }];
+      }
 
-    // Aktualizacja choosenSlots
+      if (index > clickedSlotIndex) {
+        const isPrevSlotSelectable = localPreparedSlots[index - 1].isSelectable;
+
+        // if (!slot.isSelectable && !isSlotSelectableFalseEncountered) {
+        //   console.log(
+        //     index,
+        //     '<- index',
+        //     'slot.isSelectable=',
+        //     slot.isSelectable,
+        //   );
+        //   isSlotSelectableFalseEncountered = true;
+        // }
+
+        if (
+          isPrevSlotSelectable &&
+          slot.isSelectable &&
+          !isSlotSelectableFalseEncountered
+        ) {
+          console.log('!isPrevSlotSelectable', !isPrevSlotSelectable);
+          console.log('slot.isSelectable', slot.isSelectable);
+          console.log('slot.isSelectable', !isSlotSelectableFalseEncountered);
+
+          console.log('wchodze w te pojebane warunki ziom');
+          console.log('prevSlot:', localPreparedSlots[index - 1]);
+          console.log('a ten teraz: ', slot);
+          const updatedSlot = { ...slot, isSelectable: true };
+          return accumulator.concat([updatedSlot]);
+        } else {
+          isSlotSelectableFalseEncountered = true;
+          const updatedSlot = { ...slot, isSelectable: false };
+          return accumulator.concat([updatedSlot]);
+        }
+      }
+
+      return [...accumulator, { ...slot }];
+    }, []);
+
     const isSlotChoosen = choosenSlots.some((slot) => slot.id === id);
+
     if (!isSlotChoosen) {
       setChoosenSlots((prev) => [...prev, clickedSlot]);
     } else {
@@ -66,10 +108,6 @@ export default function ColumnActive({
     setLocalPreparedSlots(newSlots);
   };
 
-  const newTime = new Date().getTime();
-  // console.log('newTime =>', newTime);
-  // console.log('date =>', date.getTime());
-  // console.log(newTime > date.getTime());
   return (
     <div key={date.toISOString()} className="space-y-0.5">
       <Header date={date} isActive={true} />
@@ -93,32 +131,6 @@ export default function ColumnActive({
             date={date}
             time={time}
           />
-          // <div key={`${date.toISOString()}-${time}`}>
-          //   {' '}
-          //   <div
-          //     key={`${date.toISOString()}-${time}`}
-          //     className={`h-6 relative
-          //     ${time.endsWith(':45') ? 'border-b-2 border-[#B0B0B0]' : ''}
-          //     ${
-          //       false
-          //         ? 'bg-[#D3D3D3]'
-          //         : isSelected
-          //         ? 'bg-[#075c07] cursor-pointer'
-          //         : currentSlot?.isSelectable
-          //         ? 'bg-[#5ce167] hover:bg-[#086e08] cursor-pointer'
-          //         : currentSlot?.isAvailable
-          //         ? 'bg-[#7c7c7c] cursor-pointer'
-          //         : ''
-          //     }
-          //   `}
-          //     onClick={() => handleSlotClick(currentSlot!)}
-          //     title={
-          //       currentSlot?.isAvailable
-          //         ? `${format(date, 'dd.MM.yyyy')} ${time}`
-          //         : ''
-          //     }
-          //   />
-          // </div>
         );
       })}
     </div>
