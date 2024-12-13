@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { TimeSlot, BookingFormProps } from './types';
 import { getAvailableSlots } from '@/lib/api';
-import TimeGrid from '../TimeGrid/TimeGrid';
+import TimeGrid from './TimeGrid/TimeGridHeader';
+import { Summary } from './TimeGrid/Summary/Summary';
 
 export default function BookingForm({ userId }: BookingFormProps) {
   const [selectedSlot, setSelectedSlot] = useState<string>('');
@@ -59,6 +60,7 @@ export default function BookingForm({ userId }: BookingFormProps) {
         <TimeGrid slots={slots} />
       </div>
 
+      <Summary />
       <div className="space-y-2">
         <label htmlFor="notes" className="block font-medium">
           Dodatkowe uwagi
@@ -72,7 +74,6 @@ export default function BookingForm({ userId }: BookingFormProps) {
           placeholder="Opcjonalne uwagi do spotkania..."
         />
       </div>
-
       <Button
         type="submit"
         className="w-full"

@@ -6,8 +6,8 @@ export async function GET() {
   const slots: TimeSlot[] = [];
   let id = 1;
 
-  // Generujemy sloty dla najbliższych 3 dni
-  for (let day = 0; day < 3; day++) {
+  // Generujemy sloty dla najbliższych 8 dni
+  for (let day = 0; day < 8; day++) {
     const currentDate = new Date(today);
     currentDate.setDate(today.getDate() + day);
     const dateStr = currentDate.toISOString().split('T')[0];

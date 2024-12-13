@@ -1,0 +1,17 @@
+.available {
+  background-color: rgb(196, 199, 24);
+}
+
+.selectable {
+  background-color: rgb(30, 148, 79);
+  cursor: pointer;
+}
+
+.choosen {
+  background-color: rgb(7, 46, 23);
+  cursor: pointer;
+}
+
+.isUnavailable {
+  background-color: transparent;
+}

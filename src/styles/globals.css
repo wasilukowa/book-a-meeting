@@ -4,6 +4,11 @@
 
 @layer base {
   :root {
+    --slot-available-color: #e1cf5c;
+    --slot-selected-color: #7f2982;
+    --weekend-color: #d3d3d3;
+    --border-color: #b0b0b0;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
