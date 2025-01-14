@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Prisma schema for calendar booking system
+
+model User {
+  id                  Int                @id @default(autoincrement())
+  name                String             @db.VarChar(255)
+  surname             String             @db.VarChar(255)
+  email               String             @unique @db.VarChar(255)
+  ownedBookings       Booking[]          @relation("BookingOwner")
+  participantBookings Booking[]          @relation("BookingParticipant")
+  notifications       Notification[]
+  credentials         Credential[]
+  calendarSettings    CalendarSettings[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model Credential {
+  id          Int          @id @default(autoincrement())
+  provider    AuthProvider
+  password    String?
+  providerId  String?
+  accessToken String?      @db.Text
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([provider, userId])
+}
+
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+  FACEBOOK
+  GITHUB
+}
+
+model Booking {
+  id        Int           @id @default(autoincrement())
+  date      DateTime
+  startTime DateTime
+  endTime   DateTime
+  title     String?       @db.VarChar(255)
+  comment   String?       @db.Text
+  status    BookingStatus @default(PENDING)
+
+  ownerId       Int
+  owner         User           @relation("BookingOwner", fields: [ownerId], references: [id])
+  userId        Int
+  user          User           @relation("BookingParticipant", fields: [userId], references: [id])
+  notifications Notification[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([ownerId])
+  @@index([userId])
+  @@index([date, startTime, endTime])
+}
+
+enum BookingStatus {
+  ACCEPTED
+  PENDING
+  REJECTED
+  CANCELED
+}
+
+model CalendarSettings {
+  id          Int     @id @default(autoincrement())
+  isPublic    Boolean @default(false)
+  workingDays Json // Format: { "monday": { "start": "08:00", "end": "16:00" }, ... }
+  exceptions  Json? // Holidays, time off, etc.
+  userId      Int     @unique
+  user        User    @relation(fields: [userId], references: [id])
+
+  updatedAt         DateTime @updatedAt
+  slotDuration      Int      @default(60)
+  bookingLeadTime   Int      @default(24)
+  maxBookingsPerDay Int?
+}
+
+enum NotificationType {
+  BOOKING_REQUEST
+  BOOKING_CONFIRMATION
+  BOOKING_CANCELLATION
+  BOOKING_REMINDER
+}
+
+model Notification {
+  id       Int              @id @default(autoincrement())
+  message  String           @db.Text
+  isRead   Boolean          @default(false)
+  type     NotificationType
+  metadata Json?
+
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
+  bookingId Int
+  booking   Booking @relation(fields: [bookingId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}
